@@ -1,0 +1,28 @@
+---
+# tasks file for mysql_db
+    -
+      name: "Install MySQL database"
+      apt: "name=\"{{ item }}\" state=present"
+      with_items:
+        - mysql-server
+        - mysql-client
+    -
+      name: "Start MySQL Service"
+      service:
+        enabled: true
+        name: mysql
+        state: started
+    -
+      name: "Crate Application database"
+      mysql_db: "name={{ db_name }} state=present"
+
+    -
+      name: "create Database User"
+      mysql_user:
+        login_user: "{{ login_user }}"
+        login_password: "{{ login_password }}"
+        host: "%"
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        priv: '*.*:ALL'
+        state: present
